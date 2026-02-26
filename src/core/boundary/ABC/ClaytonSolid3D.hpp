@@ -1,10 +1,11 @@
+// -----------------------------------------------------------------------------
 //
-//  ClaytonSolid3D.hpp
-//  AxiSEM3D
+// SPDX-License-Identifier: MIT
+// Copyright (C) 2019 - 2026 by the AxiSEM3D authors
 //
-//  Created by Kuangdai Leng on 7/29/19.
-//  Copyright © 2019 Kuangdai Leng. All rights reserved.
+// This file is part of the AxiSEM3D library. See the LICENSE file for details.
 //
+// -----------------------------------------------------------------------------
 
 //  Clayton-Enquist ABC for solid points in 3D
 //  f = v.n n * rpa + (v - v.n n) * rsa

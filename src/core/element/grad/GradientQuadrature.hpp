@@ -1,10 +1,11 @@
+// -----------------------------------------------------------------------------
 //
-//  GradientQuadrature.hpp
-//  AxiSEM3D
+// SPDX-License-Identifier: MIT
+// Copyright (C) 2019 - 2026 by the AxiSEM3D authors
 //
-//  Created by Kuangdai Leng on 4/25/19.
-//  Copyright © 2019 Kuangdai Leng. All rights reserved.
+// This file is part of the AxiSEM3D library. See the LICENSE file for details.
 //
+// -----------------------------------------------------------------------------
 
 //  elemental gradient and quadrature
 //  v2.0 features:

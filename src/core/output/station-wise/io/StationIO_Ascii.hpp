@@ -1,10 +1,11 @@
+// -----------------------------------------------------------------------------
 //
-//  StationIO_Ascii.hpp
-//  AxiSEM3D
+// SPDX-License-Identifier: MIT
+// Copyright (C) 2019 - 2026 by the AxiSEM3D authors
 //
-//  Created by Kuangdai Leng on 3/23/19.
-//  Copyright © 2019 Kuangdai Leng. All rights reserved.
+// This file is part of the AxiSEM3D library. See the LICENSE file for details.
 //
+// -----------------------------------------------------------------------------
 
 //  Ascii IO for station output
 //  only for a small number of stations
