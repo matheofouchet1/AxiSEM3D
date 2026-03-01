@@ -7,7 +7,6 @@
 //
 // -----------------------------------------------------------------------------
 
-
 #ifndef MappingSemiSpherical_hpp
 #define MappingSemiSpherical_hpp
 
