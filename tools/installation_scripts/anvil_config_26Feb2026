@@ -1,0 +1,128 @@
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+INSTALL_ROOT="${INSTALL_ROOT:-$SCRIPT_DIR}"
+cd "$INSTALL_ROOT"
+mkdir -p deps_build
+
+# ----- Load modules (Anvil) -----
+module load gcc/11.2.0       2>/dev/null || true
+module load openmpi/4.0.6    2>/dev/null || true
+module load boost/1.74.0     2>/dev/null || true
+module load fftw/3.3.8      2>/dev/null || true
+module load hdf5/1.10.7     2>/dev/null || true
+module load netcdf-c/4.7.4  2>/dev/null || true
+
+# ----- Detect dependency paths (any Anvil user: first gcc-11.2.0 under Spack apps) -----
+find_first_spack() {
+  local dir="$1" ver="$2"
+  local p
+  for p in /apps/spack/anvil/apps/"$dir"/"$ver"-gcc-11.2.0-*; do
+    [ -d "$p" ] && echo "$p" && return 0
+  done
+  return 1
+}
+
+if [ -z "${BOOST_ROOT}" ]; then
+  BOOST_ROOT=$(find_first_spack boost 1.74.0) || BOOST_ROOT=""
+fi
+if [ -z "${FFTW_ROOT}" ]; then
+  FFTW_ROOT=$(find_first_spack fftw 3.3.8) || FFTW_ROOT=""
+fi
+if [ -z "${HDF5_ROOT}" ]; then
+  HDF5_ROOT=$(find_first_spack hdf5 1.10.7) || HDF5_ROOT=""
+fi
+if [ -z "${NETCDF_ROOT}" ]; then
+  NETCDF_ROOT=$(find_first_spack netcdf-c 4.7.4) || NETCDF_ROOT=""
+fi
+
+# Allow explicit overrides (e.g. from module show or different cluster)
+: "${BOOST_ROOT:=/apps/spack/anvil/apps/boost/1.74.0-gcc-11.2.0-muirj4i}"
+: "${FFTW_ROOT:=/apps/spack/anvil/apps/fftw/3.3.8-gcc-11.2.0-wmcvzic}"
+: "${HDF5_ROOT:=/apps/spack/anvil/apps/hdf5/1.10.7-gcc-11.2.0-3hn56wr}"
+: "${NETCDF_ROOT:=/apps/spack/anvil/apps/netcdf-c/4.7.4-gcc-11.2.0-vrjlz2r}"
+
+for var in BOOST_ROOT FFTW_ROOT HDF5_ROOT NETCDF_ROOT; do
+  eval "val=\$$var"
+  if [ ! -d "$val" ]; then
+    echo "ERROR: $var=$val not found. Load modules or set $var to your install path." >&2
+    exit 1
+  fi
+done
+
+export BOOST_ROOT FFTW_ROOT HDF5_ROOT NETCDF_ROOT
+
+# ----- METIS: use existing or build and install to INSTALL_ROOT/install -----
+METIS_INSTALL="$INSTALL_ROOT/install"
+need_metis_build=false
+if [ -n "${METIS_ROOT}" ]; then
+  if [ ! -f "${METIS_ROOT}/lib/libmetis.so" ] && [ ! -f "${METIS_ROOT}/lib/libmetis.a" ]; then
+    echo "WARNING: METIS_ROOT=${METIS_ROOT} has no libmetis; will build METIS." >&2
+    need_metis_build=true
+  fi
+else
+  if [ -f "$HOME/local/lib/libmetis.so" ] || [ -f "$HOME/local/lib/libmetis.a" ]; then
+    METIS_ROOT="$HOME/local"
+  elif [ -f "$METIS_INSTALL/lib/libmetis.so" ] || [ -f "$METIS_INSTALL/lib/libmetis.a" ]; then
+    METIS_ROOT="$METIS_INSTALL"
+  else
+    need_metis_build=true
+  fi
+fi
+
+if [ "$need_metis_build" = true ]; then
+  echo "Building METIS 5.1.0 and installing to $METIS_INSTALL ..."
+  if [ ! -d "$INSTALL_ROOT/deps_build/METIS-1/metis-5.1.0" ]; then
+    echo "  Downloading METIS-1 (bundles METIS 5.1.0) ..."
+    curl -sL "https://github.com/xijunke/METIS-1/archive/refs/heads/master.tar.gz" -o "$INSTALL_ROOT/deps_build/METIS-1.tar.gz"
+    tar -xzf "$INSTALL_ROOT/deps_build/METIS-1.tar.gz" -C "$INSTALL_ROOT/deps_build"
+    mv "$INSTALL_ROOT/deps_build/METIS-1-master" "$INSTALL_ROOT/deps_build/METIS-1"
+  fi
+  cd "$INSTALL_ROOT/deps_build/METIS-1/metis-5.1.0"
+  make config prefix="$METIS_INSTALL" shared=1 cc=gcc
+  make -j4
+  make install
+  cd "$INSTALL_ROOT"
+  METIS_ROOT="$METIS_INSTALL"
+fi
+export METIS_ROOT
+
+# ----- Eigen 3.4 (required by AxiSEM3D; header-only) -----
+if [ ! -f "$INSTALL_ROOT/deps_build/eigen-src/signature_of_eigen3_matrix_library" ]; then
+  echo "Cloning Eigen 3.4 ..."
+  git clone --depth 1 --branch 3.4 https://gitlab.com/libeigen/eigen.git "$INSTALL_ROOT/deps_build/eigen-src"
+fi
+EIGEN34="$INSTALL_ROOT/deps_build/eigen-src"
+
+# ----- AxiSEM3D -----
+if [ ! -d "$INSTALL_ROOT/AxiSEM3D/.git" ]; then
+  echo "Cloning AxiSEM3D ..."
+  git clone --depth 1 https://github.com/AxiSEMunity/AxiSEM3D.git "$INSTALL_ROOT/AxiSEM3D"
+fi
+
+# CMake 3.26 compat
+if grep -q 'cmake_minimum_required(VERSION 3.28)' "$INSTALL_ROOT/AxiSEM3D/CMakeLists.txt" 2>/dev/null; then
+  sed -i.bak 's/cmake_minimum_required(VERSION 3.28)/cmake_minimum_required(VERSION 3.26)/' "$INSTALL_ROOT/AxiSEM3D/CMakeLists.txt"
+fi
+
+# Configure and build
+rm -rf "$INSTALL_ROOT/AxiSEM3D/build"
+mkdir -p "$INSTALL_ROOT/AxiSEM3D/build"
+cd "$INSTALL_ROOT/AxiSEM3D/build"
+
+cmake .. \
+  -Dcxx=mpicxx \
+  -Deigen="$EIGEN34" \
+  -DEIGEN3_INCLUDE_DIR="$EIGEN34" \
+  -Dboost="$BOOST_ROOT" \
+  -Dfftw="$FFTW_ROOT" \
+  -Dmetis="$METIS_ROOT" \
+  -Dnetcdf="$NETCDF_ROOT" \
+  -Dhdf5="$HDF5_ROOT" \
+  -Dpar_netcdf=false
+
+cmake --build . -j4
+
+echo ""
+echo "Done. Executable: $INSTALL_ROOT/AxiSEM3D/build/axisem3d"
+echo "Run: $INSTALL_ROOT/AxiSEM3D/build/axisem3d --help"
