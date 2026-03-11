@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% This code is an example for how to create AxiSEM3D netcdf input for an 
-%% elastic tensor Cij. 
-%% In the following, we incorporate the anisotropy from anisotropic PREM 
+%% This code is an example for how to create AxiSEM3D netcdf input for an
+%% elastic tensor Cij.
+%% In the following, we incorporate the anisotropy from anisotropic PREM
 %% in the upper mantle.
 %%
 %% For questions, please contact Jonathan Wolf (jonathan.wolf@yale.edu)
@@ -10,14 +10,14 @@
 %% There is no guarantee for functionality or fitness for any particular
 %% purpose.
 %%
-%% In this code we use functions from: 
-%% AM Walker and JM Wookey, MSAT - a new toolkit for the analysis of 
+%% In this code we use functions from:
+%% AM Walker and JM Wookey, MSAT - a new toolkit for the analysis of
 %% elastic and seismic anisotropy, 2012.
 %%
 %% and elastic tensors from:
-%% NM Creasy and L Miyagi and MD Long, A Library of Elastic Tensors for 
-%% Lowermost Mantle Seismic Anisotropy Studies and Comparison With Seismic 
-%% Observations, 2020
+%% NM Creasy and L Miyagi and MD Long, A Library of Elastic Tensors for
+%% Lowermost Mantle Seismic Anisotropy Studies and Comparison With Seismic
+%% Observations, 2020.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear all
@@ -42,7 +42,7 @@ C_br = [[1013.272	448.399	450.036	-0.071	-0.129	18.892];
 C_br = MS_rot3(C_br, 0, 0, 0);
 rh_br = 5191; %Density of bridgmanite
 
-%Karki et al., 1999 135 Gpa, 3000 K				Density (kg/m^3): 5035	
+%Karki et al., 1999 135 Gpa, 3000 K				Density (kg/m^3): 5035
 %from Table S3
 C_fe = [[1003.571	414.375	419.063	-0.893	0.418	40.209];
 [414.375	1011.121	411.513	1.219	-0.177	-46.414];
@@ -53,7 +53,7 @@ C_fe = [[1003.571	414.375	419.063	-0.893	0.418	40.209];
 C_fe = MS_rot3(C_fe, 0, 0, 0);
 rh_fe = 5035;
 
-%Stackhouse et al., 2005 136 GPa, 3000 K	Density (kg/m^3): 5336	
+%Stackhouse et al., 2005 136 GPa, 3000 K	Density (kg/m^3): 5336
 %from Table S7
 C_ppv = [[1041.977	447.453	425.724	0.273	-0.395	5.270];
 [447.453	1041.731	449.124	0.784	-0.305	-6.771];
@@ -68,7 +68,7 @@ C_ppv = MS_rot3(C_ppv, 0, 80, 0);
 rh_ppv = 5336;
 
 
-%Wookey et al., 2005b 126 Gpa, 2800 K; Density (kg/m^3): 5152	
+%Wookey et al., 2005b 126 Gpa, 2800 K; Density (kg/m^3): 5152
 %TableS9
 C_brfp = [[1006.982	440.176	445.370	-0.485	0.199	8.503];
 [440.176	949.262	439.990	0.060	-0.494	21.353];
@@ -79,7 +79,7 @@ C_brfp = [[1006.982	440.176	445.370	-0.485	0.199	8.503];
 C_brfp = MS_rot3(C_brfp, 0, 0, 0);
 rh_brfp = 5152; %Density of Br
 
-%Stackhouse et al., 2005 136 GPa, 3000 K; Density (kg/m^3): 5261	
+%Stackhouse et al., 2005 136 GPa, 3000 K; Density (kg/m^3): 5261
 %from Table S16
 C_ppvfp = [[1031.804	439.525	423.810	-0.020	-0.170	14.285];
 [439.525	1033.351	439.831	0.885	-0.285	-16.946];
@@ -101,8 +101,8 @@ C = NaN(6,6,length(lat) * length(lon), length(depth));
 
 %choose elastic tensor here. We use a Ppv tensor here.
 for i=1:length(depth)
-    for j = 1:length(lat) * length(lon)        
-        C(:,:,j,i) = C_ppv(:,:);        
+    for j = 1:length(lat) * length(lon)
+        C(:,:,j,i) = C_ppv(:,:);
     end
 end
 
@@ -174,38 +174,38 @@ c56_tmp = c11_tmp;
 
 c66_tmp = c11_tmp;
 
-%populate the variables (a little cruncky but works just fine)
+%populate the variables (a little clunky but works just fine)
 
 for i = 1:length(depth)
-    
+
     c11_tmp(:,:,i) = reshape(Cijkl(1,1,:,i),[length(lat), length(lon)])' ;
-    
+
     c12_tmp(:,:,i) = reshape(Cijkl(1,2,:,i),[length(lat), length(lon)])' ;
     c13_tmp(:,:,i) = reshape(Cijkl(1,3,:,i),[length(lat), length(lon)])' ;
     c14_tmp(:,:,i) = reshape(Cijkl(1,4,:,i),[length(lat), length(lon)])' ;
     c15_tmp(:,:,i) = reshape(Cijkl(1,5,:,i),[length(lat), length(lon)])' ;
     c16_tmp(:,:,i) = reshape(Cijkl(1,6,:,i),[length(lat), length(lon)])' ;
-    
+
     c22_tmp(:,:,i) = reshape(Cijkl(2,2,:,i),[length(lat), length(lon)])' ;
     c23_tmp(:,:,i) = reshape(Cijkl(2,3,:,i),[length(lat), length(lon)])' ;
     c24_tmp(:,:,i) = reshape(Cijkl(2,4,:,i),[length(lat), length(lon)])' ;
     c25_tmp(:,:,i) = reshape(Cijkl(2,5,:,i),[length(lat), length(lon)])' ;
     c26_tmp(:,:,i) = reshape(Cijkl(2,6,:,i),[length(lat), length(lon)])' ;
-    
+
     c33_tmp(:,:,i) = reshape(Cijkl(3,3,:,i),[length(lat), length(lon)])' ;
     c34_tmp(:,:,i) = reshape(Cijkl(3,4,:,i),[length(lat), length(lon)])' ;
     c35_tmp(:,:,i) = reshape(Cijkl(3,5,:,i),[length(lat), length(lon)])' ;
     c36_tmp(:,:,i) = reshape(Cijkl(3,6,:,i),[length(lat), length(lon)])' ;
-    
+
     c44_tmp(:,:,i) = reshape(Cijkl(4,4,:,i),[length(lat), length(lon)])' ;
     c45_tmp(:,:,i) = reshape(Cijkl(4,5,:,i),[length(lat), length(lon)])' ;
     c46_tmp(:,:,i) = reshape(Cijkl(4,6,:,i),[length(lat), length(lon)])' ;
-    
+
     c55_tmp(:,:,i) = reshape(Cijkl(5,5,:,i),[length(lat), length(lon)])' ;
     c56_tmp(:,:,i) = reshape(Cijkl(5,6,:,i),[length(lat), length(lon)])' ;
-    
+
     c66_tmp(:,:,i) = reshape(Cijkl(6,6,:,i),[length(lat), length(lon)])' ;
-    
+
 end
 
 

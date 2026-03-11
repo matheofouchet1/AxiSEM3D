@@ -4,8 +4,8 @@
 %% AxiSEM3D than just incorporating uniform anisotropy.
 %% Author of this code: Jonathan Wolf, Yale U.
 %%
-%% In this code we use functions from: 
-%% AM Walker and JM Wookey, MSAT - a new toolkit for the analysis of 
+%% In this code we use functions from:
+%% AM Walker and JM Wookey, MSAT - a new toolkit for the analysis of
 %% elastic and seismic anisotropy, 2012.
 %%
 %% and elastic tensors from:
@@ -26,21 +26,21 @@ C_a = [[236.3 84.5  81.5  0.4   3.4   0.3];
 		[0.4    -1.8  -1.3  64.9  -0.1  -1.9];
 		[3.4    1.2   6.1   -0.1  68.7  0.3];
 		[0.3    0.3   0.2   -1.9  0.3   66.6]];
-     
+
 C_c =[[223.2   83.6   83.3   0.3   -3.7   0.3];
 	     [83.6     209.8  81.9   0.8   1.5    0.3];
 		 [83.3     81.9   228.5  0.4   -5.9 0.2];
 	     [0.3      0.8    0.4  67.9   0.2   -1.9];
 		 [-3.7     1.5	  -5.9	0.2   71.1	0.3];
 		 [0.3      0.3    0.2	-1.9  0.3	66.6]];
-     
+
 C_e = [[236.8 82.3 84.1 -0.6 0.4 0.1];
 	   [82.3 207.7 82.7 -2.6 -0.3 -1.0];
 	   [84.1 82.7  217.4  -2.1  -1.9  -0.7];
 	   [-0.6  -2.6 -2.1   65.0	0.1	0.4];
        [0.4 -0.3  -1.9 0.1 71.1	-1.4];
        [0.1 -1.0  -0.7 0.4 -1.4 68.5]];
-      
+
 
 %Which Olivine tensor would you like to use?
 C = C_e;
@@ -72,7 +72,7 @@ depth = [10:10:1000];
 %interpolate rho to model depths
 rho = interp1(depth_stw05,density_stw05,depth);
 
-%% A little crunky but works: Create elastic tensor for every lat-lon-depth
+%% A little clunky but works: Create elastic tensor for every lat-lon-depth
 stop_at_depth = 410; %km
 stop_index = stop_at_depth/10;
 
@@ -114,33 +114,33 @@ for d = 1:stop_index %only upper mantle
     latcount = 0;
     for la = 1:length(lat)
     %for la = 1
-        
+
         loncount = 0;
         for lo = 1:length(lon)
              index = (latcount*(length(lon))+lo)+depthcount*(length(lat)*length(lon));
-             
+
              %Calculate fast polarization direction, and ani percentage for vertical
              %raypath. Rotate slightly yo adjust for fast polarization direction
              [pol, perc_ani, ~, ~,~] = MS_phasevels(C,rho(d) * 1000, 90, 0);
              C_loop = MS_rot3(C, 0, 0, -pol);
-             
+
              %calculate isotropic equivalent
              [Ciso] = MS_decomp(C_loop);
-             
+
              %percentage of ani tensor
              int_perc = ani_mult_fac * magnitude(index)/perc_ani;
-             
+
              %make tensor with correct ani strength
              [C_loop, ~] = MS_VRH([int_perc, 1-int_perc], C_loop, rho(d) * 1000, Ciso, rho(d) * 1000);
-             
+
              %adjust fast direction
              C_loop = MS_rot3(C_loop,0,0,fast_dir(index));
              %MS_plot(C_loop, rho(d) * 1000, 'quiet', 'polsize', .18, .16, 2.0, 1.0)
-             
+
              if (MS_checkC(C_loop)==0)
                  fprintf('C corrupted \n')
              end
-             
+
              %populate tensor components
              C11_tmp(lo,la,d) = C_loop(1,1);
              C12_tmp(lo,la,d) = C_loop(1,2);
@@ -153,22 +153,22 @@ for d = 1:stop_index %only upper mantle
              C23_tmp(lo,la,d) = C_loop(2,3);
              C24_tmp(lo,la,d) = C_loop(2,4);
              C25_tmp(lo,la,d) = C_loop(2,5);
-             C26_tmp(lo,la,d) = C_loop(2,6);             
-             
+             C26_tmp(lo,la,d) = C_loop(2,6);
+
              C33_tmp(lo,la,d) = C_loop(3,3);
              C34_tmp(lo,la,d) = C_loop(3,4);
              C35_tmp(lo,la,d) = C_loop(3,5);
-             C36_tmp(lo,la,d) = C_loop(3,6);      
-             
+             C36_tmp(lo,la,d) = C_loop(3,6);
+
              C44_tmp(lo,la,d) = C_loop(4,4);
              C45_tmp(lo,la,d) = C_loop(4,5);
-             C46_tmp(lo,la,d) = C_loop(4,6);        
-             
+             C46_tmp(lo,la,d) = C_loop(4,6);
+
              C55_tmp(lo,la,d) = C_loop(5,5);
-             C56_tmp(lo,la,d) = C_loop(5,6);                
-             
-             C66_tmp(lo,la,d) = C_loop(6,6);                
-             
+             C56_tmp(lo,la,d) = C_loop(5,6);
+
+             C66_tmp(lo,la,d) = C_loop(6,6);
+
              rho_tmp(lo,la,d) = rho(d) * 1000;
              loncount = loncount+1;
         end

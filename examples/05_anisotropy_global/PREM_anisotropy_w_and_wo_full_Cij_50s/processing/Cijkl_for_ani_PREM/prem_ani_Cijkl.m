@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% This code is an example for how to create AxiSEM3D netcdf input for an 
-%% elastic tensor Cij. 
-%% In the following, we incorporate the anisotropy from anisotropic PREM 
+%% This code is an example for how to create AxiSEM3D netcdf input for an
+%% elastic tensor Cij.
+%% In the following, we incorporate the anisotropy from anisotropic PREM
 %% in the upper mantle.
 %%
 %% For questions, please contact Jonathan Wolf (jonathan.wolf@yale.edu)
@@ -22,18 +22,18 @@ Cijkl = zeros(6, 6, length(prem));
 depth = NaN(1,length(prem));
 rh = NaN(1,length(prem));
 %only read the PREM values for the layer that you are interested in
-n = 1;  
+n = 1;
 for i = 1:length(prem)
     if (prem(i,8) ~= 1.0) % eta
         if prem(i,6) > 0. %  not the outer core
-           
+
            % These are the so-called Love parameters.
            A = prem(i,3) *  prem(i,5) * prem(i,5); % A = rho * vpv^2
            C = prem(i,3) *  prem(i,4) * prem(i,4); % C = rho * vph^2
            L = prem(i,3) *  prem(i,6) * prem(i,6); % L = rho * vsv^2
            N = prem(i,3) *  prem(i,7) * prem(i,7); % N = rho * vsh^2
            F = prem(i,8) * (A - 2 * L);
-           
+
            % Translate Love parameters to Cij
            Cijkl(1,1,n) = A; Cijkl(2,2,n) = A;
            Cijkl(1,2,n) =  A - 2 * N; Cijkl(2,1,n) = A - 2 * N;
@@ -80,8 +80,8 @@ C = NaN(6,6,length(lat) * length(lon), length(depth));
 
 
 for i=1:length(depth)
-    for j = 1:length(lat) * length(lon)        
-        C(:,:,j,i) = Cijkl(:,:,i);        
+    for j = 1:length(lat) * length(lon)
+        C(:,:,j,i) = Cijkl(:,:,i);
     end
 end
 
@@ -157,35 +157,35 @@ c66_tmp = c11_tmp;
 %This ugly, but it works.
 
 for i = 1:length(depth)
-    
+
     c11_tmp(:,:,i) = reshape(Cijkl(1,1,:,i),[length(lat), length(lon)])' ;
-    
+
     c12_tmp(:,:,i) = reshape(Cijkl(1,2,:,i),[length(lat), length(lon)])' ;
     c13_tmp(:,:,i) = reshape(Cijkl(1,3,:,i),[length(lat), length(lon)])' ;
     c14_tmp(:,:,i) = reshape(Cijkl(1,4,:,i),[length(lat), length(lon)])' ;
     c15_tmp(:,:,i) = reshape(Cijkl(1,5,:,i),[length(lat), length(lon)])' ;
     c16_tmp(:,:,i) = reshape(Cijkl(1,6,:,i),[length(lat), length(lon)])' ;
-    
+
     c22_tmp(:,:,i) = reshape(Cijkl(2,2,:,i),[length(lat), length(lon)])' ;
     c23_tmp(:,:,i) = reshape(Cijkl(2,3,:,i),[length(lat), length(lon)])' ;
     c24_tmp(:,:,i) = reshape(Cijkl(2,4,:,i),[length(lat), length(lon)])' ;
     c25_tmp(:,:,i) = reshape(Cijkl(2,5,:,i),[length(lat), length(lon)])' ;
     c26_tmp(:,:,i) = reshape(Cijkl(2,6,:,i),[length(lat), length(lon)])' ;
-    
+
     c33_tmp(:,:,i) = reshape(Cijkl(3,3,:,i),[length(lat), length(lon)])' ;
     c34_tmp(:,:,i) = reshape(Cijkl(3,4,:,i),[length(lat), length(lon)])' ;
     c35_tmp(:,:,i) = reshape(Cijkl(3,5,:,i),[length(lat), length(lon)])' ;
     c36_tmp(:,:,i) = reshape(Cijkl(3,6,:,i),[length(lat), length(lon)])' ;
-    
+
     c44_tmp(:,:,i) = reshape(Cijkl(4,4,:,i),[length(lat), length(lon)])' ;
     c45_tmp(:,:,i) = reshape(Cijkl(4,5,:,i),[length(lat), length(lon)])' ;
     c46_tmp(:,:,i) = reshape(Cijkl(4,6,:,i),[length(lat), length(lon)])' ;
-    
+
     c55_tmp(:,:,i) = reshape(Cijkl(5,5,:,i),[length(lat), length(lon)])' ;
     c56_tmp(:,:,i) = reshape(Cijkl(5,6,:,i),[length(lat), length(lon)])' ;
-    
+
     c66_tmp(:,:,i) = reshape(Cijkl(6,6,:,i),[length(lat), length(lon)])' ;
-    
+
 end
 
 
