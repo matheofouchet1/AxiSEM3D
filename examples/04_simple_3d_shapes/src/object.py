@@ -20,7 +20,7 @@ class Object(ABC):
         :type rho: float
         :param dim: Dimensions of the cylinder. These must be given in the following order: [h, rad, theta, phi, expand_int] where h is the length of the cylinder, rad is the radius of the cylinder, theta and phi are rotation angles away from the major axis and expand_int is an integer value with which to scale the grid in which the shape is searched for. See notes on expand_int below.
         :type dim: 5-element list or numpy array
-        :param loc: [x,y,z] of center of cylinder.
+        :param loc: [x,y,z] of centre of cylinder.
         :type loc: 3-element list or numpy array. Defaults to None and can be updated later using ```set_loc()```.
         """
 
