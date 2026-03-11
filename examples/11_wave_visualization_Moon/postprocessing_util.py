@@ -1439,7 +1439,7 @@ def legend_without_duplicate_labels(ax):
 
 def get_phase_colors(phase_list):
 
-    # give some basic phases the same colors everytime
+    # give some basic phases the same colors every time
 
     phase_list_extra = []
     for phase in phase_list:

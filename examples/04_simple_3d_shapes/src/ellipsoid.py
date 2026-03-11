@@ -6,11 +6,11 @@ class Ellipsoid(Object):
         """
         :param model: The instance of :class:`~model.Model` object shape is injected into.
         :type  model: :class:`~model.Model`
-        :param vp:    Homogenous p-wave velocity for ellipsoid.
+        :param vp:    Homogeneous P-wave velocity for ellipsoid.
         :type vp:   float
-        :param vs: Homogenous s-wave velocity for ellipsoid.
+        :param vs: Homogeneous S-wave velocity for ellipsoid.
         :type vs:   float
-        :param rho: Homogenous density for ellipsoid.
+        :param rho: Homogeneous density for ellipsoid.
         :type rho: float
         :param dim: Dimensions of the ellipsoid. If single value then no rotation and all radii are equal (sphere). If 6 elements, these must be given in the following order: [rad_x, rad_y, rad_z, theta, phi, expand_int] where the first 3 elements are the radii in each direction, theta and phi are rotation angles away from the x and z aces and expand_int is an integer value with which to scale the grid in which the shape is searched for. See notes on expand_int below.
         :type dim: single value, or 6-element list/array

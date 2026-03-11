@@ -112,7 +112,7 @@ for azi in range(4):
         # Convert trace to numpy arrays for mpl plotting
         t, d = obspy_gen_mpl(tr)
 
-        # Some emirical scaling of data amplitude to separation on y axis
+        # Some empirical scaling of data amplitude to separation on y axis
         if norm_traces:
             ax.plot(t, norm(d)+istn/1.75, color=hex[-istn], linewidth=0.8)
         else:

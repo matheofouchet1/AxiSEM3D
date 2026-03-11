@@ -51,7 +51,7 @@ class Model(object):
         # Set number of elements:
         self._set_numel(oversaturation)
 
-        # Some details on the original 3D model (homogenous in this case)
+        # Some details on the original 3D model (homogeneous in this case)
         self.padding = np.array([0, 0, 0])
         self.unpadded_n = np.array([self.nx, self.ny, self.nz])
         self.original_shape = np.array([self.nx, self.ny, self.nz])
@@ -67,7 +67,7 @@ class Model(object):
         self.dz = self.z_length / self.nz
 
         # Define a default background model arrays for Rho, Vp and Vs which are zeros 3D arrays of the correct size:
-        # Note here that the model is defined originally as homogenous
+        # Note here that the model is defined originally as homogeneous
         # This could be edited to take an input from the user of some pre-defined 3D array that has non-zero values
         self.bm_rho = np.zeros((self.nx, self.ny, self.nz))
         self.bm_vp  = np.zeros((self.nx, self.ny, self.nz))

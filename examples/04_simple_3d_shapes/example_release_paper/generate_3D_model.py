@@ -11,7 +11,7 @@ from injector import Injector
 # utilised in the release paper (DOI .....)
 
 # The aim here is to create a cartesian box in which two of the quadrants
-# are homogenous, while the other two have spheres of heterogeneity
+# are homogeneous, while the other two have spheres of heterogeneity
 # In one quadrant these spheres are of uniform size, perturbation
 # and separation (e.g. https://doi.org/10.1093/gji/ggae098)
 # In the other quadrant the spheres are randomly spaced and sized.
@@ -34,7 +34,7 @@ nrandsph = 1000                   # Only the first n spheres will be injected.
 # _____________________________ CREATE NC MODEL ______________________________
 # NETCDF model parameters
 # In this case, we will create 1 nc file that is the same size as the domain,
-# rather than mutliple, smaller nc files for each shape
+# rather than multiple, smaller nc files for each shape
 
 depth = 15000       # Z dimension (metres)
 vv    = 30000       # S dimension (metres)

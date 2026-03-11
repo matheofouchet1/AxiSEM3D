@@ -6,11 +6,11 @@ class Slab(Object):
         """
         :param model: The instance of :class:`~model.Model` object shape is injected into.
         :type  model: :class:`~model.Model`
-        :param vp:    Homogenous p-wave velocity for slab.
+        :param vp:    Homogeneous P-wave velocity for slab.
         :type vp:   float
-        :param vs: Homogenous s-wave velocity for slab.
+        :param vs: Homogeneous S-wave velocity for slab.
         :type vs:   float
-        :param rho: Homogenous density for slab.
+        :param rho: Homogeneous density for slab.
         :type rho: float
         :param dim: Dimensions of the slab. [x_length, y_length, z_length, theta, phi, expand_int] where theta, phi are rotation angles expand_int is an integer value with which to scale the grid in which the shape is searched for.
         :type dim: 6-element list/array

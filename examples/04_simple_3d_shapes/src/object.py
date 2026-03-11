@@ -12,11 +12,11 @@ class Object(ABC):
 
         :param model: The instance of :class:`~model.Model` object shape is injected into.
         :type  model: :class:`~model.Model`
-        :param vp:    Homogenous p-wave velocity for cylinder.
+        :param vp:    Homogeneous p-wave velocity for cylinder.
         :type vp:   float
-        :param vs: Homogenous s-wave velocity for cylinder.
+        :param vs: Homogeneous s-wave velocity for cylinder.
         :type vs:   float
-        :param rho: Homogenous density for cylinder.
+        :param rho: Homogeneous density for cylinder.
         :type rho: float
         :param dim: Dimensions of the cylinder. These must be given in the following order: [h, rad, theta, phi, expand_int] where h is the length of the cylinder, rad is the radius of the cylinder, theta and phi are rotation angles away from the major axis and expand_int is an integer value with which to scale the grid in which the shape is searched for. See notes on expand_int below.
         :type dim: 5-element list or numpy array

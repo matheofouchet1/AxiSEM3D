@@ -8,11 +8,11 @@ class Sphere(Object):
 
         :param model: The instance of :class:`~model.Model` object shape is injected into.
         :type  model: :class:`~model.Model`
-        :param vp:    Homogenous p-wave velocity for cylinder.
+        :param vp:    Homogeneous P-wave velocity for cylinder.
         :type vp:   float
-        :param vs: Homogenous s-wave velocity for cylinder.
+        :param vs: Homogeneous S-wave velocity for cylinder.
         :type vs:   float
-        :param rho: Homogenous density for cylinder.
+        :param rho: Homogeneous density for cylinder.
         :type rho: float
         :param dim: Radius of sphere.
         :type dim: float
