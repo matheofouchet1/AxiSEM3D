@@ -328,7 +328,7 @@ def animate_pyvista_png(top_dir=None,run=None,element_name=None,short_title=None
     elif pos_cam == 'tilted':
         plotter.camera.zoom(1.5)
     else:
-        print('ERROR: camera postion has to be straight or tilted')
+        print('ERROR: camera position has to be straight or tilted')
         sys.exit()
     print('setup complete')
 
@@ -385,7 +385,7 @@ def animate_pyvista_png(top_dir=None,run=None,element_name=None,short_title=None
         # Add a scene light (fixed in the scene)
         light = plotter.add_light(pv.Light(light_type='scenelight', position=event_pos, color='white', intensity=1.0))
         
-        # Labeling the Schrodinger Bassin
+        # Labeling the Schrodinger Basin
         fss_lat = -71.379*np.pi/180
         fss_lon = 138.248*np.pi/180
         fss__pos = [R*np.cos(fss_lat)*np.cos(fss_lon),R*np.cos(fss_lat)*np.sin(fss_lon),R*np.sin(fss_lat)]
@@ -394,12 +394,12 @@ def animate_pyvista_png(top_dir=None,run=None,element_name=None,short_title=None
         plotter.add_point_labels(sch, "My Labels", point_size=25,
         italic=True,font_size=60,text_color='white',point_color='black',shape_opacity=0,render_points_as_spheres=True,always_visible=True)
 
-        # Add a flash at the momment of the impact
+        # Add a flash at the moment of the impact
         # if data_time[number]<0 and data_time[number]>-2:
         #     impact = pv.PolyData(np.array([R*np.cos(event_lat)*np.cos(event_lon),R*np.cos(event_lat)*np.sin(event_lon),R*np.sin(event_lat)]))
         #     plotter.add_mesh(impact, color='white', point_size=20,render_points_as_spheres=True)
 
-        # Plotting the sismograms
+        # Plotting the seismograms
         plt.figure()
         plt.plot(time,data)
         plt.plot(time[0:number],data[0:number],color='red')
@@ -416,7 +416,7 @@ def animate_pyvista_png(top_dir=None,run=None,element_name=None,short_title=None
         print(png_file)
         
 
-        # Merging sismograms image and plotter
+        # Merging seismograms image and plotter
         background = cv2.imread(png_file)
         foreground = cv2.imread(plot_file, -1)  # Load with alpha channel
 
