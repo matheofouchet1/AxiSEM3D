@@ -15,7 +15,7 @@ which can be done using your favourite coding language such as MATLAB or
 Python. It is important to remember that these two languages save
 multidimensional arrays in column-major and row-major formats
 respectively, by default, but more on that later. If you are unfamiliar
-with netcdf files we would recommend reading this [article](https://towardsdatascience.com/create-netcdf-files-with-python-1d86829127dd).
+with netcdf files we would recommend reading this [article](https://medium.com/data-science/create-netcdf-files-with-python-1d86829127dd).
 <br>
 
 <div align="center">
